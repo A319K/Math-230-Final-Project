@@ -2,7 +2,7 @@
 title: "My Data Visualization Portfolio"
 description: |
   A showcase of my work from MATH 230: Data Visualization & Computing
-    url: https://github.com/A319K
+    url: https://a319k.github.io/Math-230-Final-Project/
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
