@@ -1,0 +1,59 @@
+---
+title: "My Data Visualization Portfolio"
+description: |
+  A showcase of my work from MATH 230: Data Visualization & Computing
+author:
+  - name: Aiden Kim
+    url: https://github.com/ajk041
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+# Learn more about creating websites with Distill at:
+# https://rstudio.github.io/distill/website.html
+
+# Learn more about publishing to GitHub Pages at:
+# https://rstudio.github.io/distill/publish_website.html#github-pages
+```
+
+## Welcome to My Data Visualization Journey
+
+As a student in MATH 230: Data Visualization & Computing, I've explored the art and science of transforming data into meaningful visual stories. This portfolio showcases my growth and accomplishments throughout the semester.
+
+## About Me
+
+I'm Aiden Kim, a student at Bucknell University with a passion for data analysis and visualization. Through this course, I've developed skills in:
+
+- Statistical visualization techniques
+- Interactive dashboard creation
+- R programming and RMarkdown
+- Data cleaning and preparation
+- Principles of effective visual communication
+
+## Featured Project: NBA Elite Player Analysis
+
+My final project explores NBA player performance through the lens of advanced analytics. Using interactive visualizations, I examine questions like:
+
+- How do offensive and defensive metrics correlate across different positions?
+- What is the relationship between usage rate and efficiency?
+- Which players provide the most value relative to their minutes played?
+
+The dashboard allows users to filter by position, minutes played, and other criteria to perform customized analysis of NBA's elite players.
+
+## Explore My Work
+
+- **[Past Work](past_works.html)**: A collection of visualizations created throughout the semester
+- **[Final Project](final_project.html)**: My comprehensive NBA player analysis dashboard
+
+## My Visualization Philosophy
+
+Effective data visualization combines aesthetic appeal with analytical clarity. I strive to create visualizations that:
+
+1. Present information accurately and transparently
+2. Utilize appropriate visual encodings for different data types
+3. Guide the viewer's attention to key insights
+4. Maintain accessibility through thoughtful color choices and clear labeling
+5. Tell a cohesive story about the underlying data
+
+*"The greatest value of a picture is when it forces us to notice what we never expected to see."* — John W. Tukey

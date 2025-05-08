@@ -1,0 +1,14 @@
+name: "my-data-viz-portfolio"
+title: "My Data Visualization Portfolio"
+description: |
+  A showcase of my work from MATH 230
+output_dir: "docs"
+navbar:
+  right:
+    - text: "Home"
+      href: index.html
+    - text: "Past Work"
+      href: past_works.html  
+    - text: "Final Project"
+      href: final_project.html
+output: distill::distill_article

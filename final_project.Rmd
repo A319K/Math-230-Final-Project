@@ -1,0 +1,15 @@
+---
+title: "Final Project"
+description: |
+  Telling a story through data visualization
+author:
+  - name: Aiden Kim
+    url: https://github.com/ajk041
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Coming Soon
+

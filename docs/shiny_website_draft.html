@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+<meta name="date" content="2025-05-04" />
+
+<title>Interactive Visualization</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="past_works.html">Past Work</a>
+</li>
+<li>
+  <a href="final_project.html">Final Project</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="section-header">
+
+
+
+<h1 class="title toc-ignore">Interactive Visualization</h1>
+<h4 class="date">2025-05-04</h4>
+
+</div>
+
+
+<pre class="r"><code>install.packages(c(&quot;shiny&quot;, &quot;ggplot2&quot;, &quot;plotly&quot;, &quot;scales&quot;, &quot;RColorBrewer&quot;, &quot;dplyr&quot;, &quot;shinydashboard&quot;))</code></pre>
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/n1/bmjsnf2966g83zq6vpf1f_xh0000gn/T//Rtmp7j7jne/downloaded_packages</code></pre>
+<pre class="r"><code># Load libraries
+library(shiny)
+library(ggplot2)
+library(plotly)
+library(scales)
+library(RColorBrewer)
+library(dplyr)
+library(shinydashboard)</code></pre>
+<pre class="r"><code># Create Shiny app
+ui &lt;- dashboardPage(
+  dashboardHeader(title = &quot;NBA Elite Player Analysis&quot;),
+  
+  dashboardSidebar(
+    sidebarMenu(
+      menuItem(&quot;Overview&quot;, tabName = &quot;overview&quot;, icon = icon(&quot;dashboard&quot;)),
+      menuItem(&quot;Player Efficiency&quot;, tabName = &quot;per&quot;, icon = icon(&quot;chart-line&quot;)),
+      menuItem(&quot;Two-Way Analysis&quot;, tabName = &quot;twoway&quot;, icon = icon(&quot;balance-scale&quot;)),
+      menuItem(&quot;Efficiency vs. Usage&quot;, tabName = &quot;efficiency&quot;, icon = icon(&quot;percentage&quot;)),
+      menuItem(&quot;Player Comparison&quot;, tabName = &quot;comparison&quot;, icon = icon(&quot;users&quot;)),
+      menuItem(&quot;About&quot;, tabName = &quot;about&quot;, icon = icon(&quot;info-circle&quot;))
+    ),
+    
+    # Add filters that apply across tabs
+    hr(),
+    h4(&quot;Filters&quot;),
+    sliderInput(&quot;min_games&quot;, &quot;Minimum Games Played:&quot;, 
+                min = 20, max = 82, value = 50),
+    sliderInput(&quot;min_minutes&quot;, &quot;Minimum Minutes Per Game:&quot;, 
+                min = 10, max = 40, value = 20),
+    selectInput(&quot;positions&quot;, &quot;Positions:&quot;, 
+                choices = c(&quot;All&quot;, &quot;PG&quot;, &quot;SG&quot;, &quot;SF&quot;, &quot;PF&quot;, &quot;C&quot;),
+                selected = &quot;All&quot;, multiple = TRUE),
+    hr(),
+    
+    # Player selection for comparison
+    h4(&quot;Player Comparison&quot;),
+    selectizeInput(&quot;player_select&quot;, &quot;Select Players to Compare:&quot;,
+                   choices = NULL, multiple = TRUE, options = list(maxItems = 5))
+  ),
+  
+  dashboardBody(
+    tabItems(
+      # Overview tab
+      tabItem(tabName = &quot;overview&quot;,
+        fluidRow(
+          box(
+            title = &quot;NBA Elite Player Analysis&quot;, status = &quot;primary&quot;, solidHeader = TRUE,
+            width = 12,
+            h3(&quot;Who is the Best NBA Player?&quot;),
+            p(&quot;This interactive dashboard explores NBA player performance through the lens of advanced analytics.&quot;),
+            p(&quot;Navigate through the tabs to explore different metrics and visualizations that help identify the NBA&#39;s elite players.&quot;),
+            p(&quot;Use the filters on the left to customize your analysis by minimum games played, minutes per game, and positions.&quot;)
+          )
+        ),
+        fluidRow(
+          valueBoxOutput(&quot;total_players_box&quot;, width = 4),
+          valueBoxOutput(&quot;top_per_box&quot;, width = 4),
+          valueBoxOutput(&quot;top_vorp_box&quot;, width = 4)
+        ),
+        fluidRow(
+          box(
+            title = &quot;Top Players by PER&quot;, status = &quot;info&quot;, solidHeader = TRUE,
+            width = 6,
+            plotlyOutput(&quot;top_per_plot&quot;, height = 400)
+          ),
+          box(
+            title = &quot;Top Players by Win Shares&quot;, status = &quot;info&quot;, solidHeader = TRUE,
+            width = 6,
+            plotlyOutput(&quot;top_ws_plot&quot;, height = 400)
+          )
+        )
+      ),
+      
+      # Player Efficiency tab
+      tabItem(tabName = &quot;per&quot;,
+        fluidRow(
+          box(
+            title = &quot;Player Efficiency Rating (PER) Analysis&quot;, status = &quot;primary&quot;, solidHeader = TRUE,
+            width = 12,
+            p(&quot;PER is a per-minute rating that sums up all a player&#39;s positive accomplishments, subtracts the negative, and returns a per-minute rating of a player&#39;s performance.&quot;),
+            p(&quot;PER above 20.0 is considered excellent, above 15.0 is average.&quot;)
+          )
+        ),
+        fluidRow(
+          box(
+            title = &quot;Top Players by PER&quot;, status = &quot;info&quot;, solidHeader = TRUE,
+            width = 6,
+            plotlyOutput(&quot;per_leaders&quot;, height = 400)
+          ),
+          box(
+            title = &quot;PER vs. Win Shares&quot;, status = &quot;info&quot;, solidHeader = TRUE,
+            width = 6,
+            plotlyOutput(&quot;per_vs_ws&quot;, height = 400)
+          )
+        ),
+        fluidRow(
+          box(
+            title = &quot;PER Distribution by Position&quot;, status = &quot;info&quot;, solidHeader = TRUE,
+            width = 12,
+            plotlyOutput(&quot;per_by_position&quot;, height = 400)
+          )
+        )
+      ),
+      
+      # Two Way Analysis tab
+      tabItem(tabName = &quot;twoway&quot;,
+        fluidRow(
+          box(
+            title = &quot;Two-Way Player Analysis&quot;, status = &quot;primary&quot;, solidHeader = TRUE,
+            width = 12,
+            p(&quot;The best players in the NBA excel on both ends of the court. This analysis identifies players who contribute significantly on both offense and defense.&quot;)
+          )
+        ),
+        fluidRow(
+          box(
+            title = &quot;Offensive vs. Defensive Rating&quot;, status = &quot;info&quot;, solidHeader = TRUE,
+            width = 6,
+            plotlyOutput(&quot;off_def_rating&quot;, height = 400)
+          ),
+          box(
+            title = &quot;Two-Way Score Analysis&quot;, status = &quot;info&quot;, solidHeader = TRUE,
+            width = 6,
+            plotlyOutput(&quot;two_way_score&quot;, height = 400)
+          )
+        ),
+        fluidRow(
+          box(
+            title = &quot;Defensive Impact Metrics&quot;, status = &quot;info&quot;, solidHeader = TRUE,
+            width = 12,
+            plotlyOutput(&quot;defensive_impact&quot;, height = 400)
+          )
+        )
+      ),
+      
+      # Efficiency vs. Usage tab
+      tabItem(tabName = &quot;efficiency&quot;,
+        fluidRow(
+          box(
+            title = &quot;Scoring Efficiency vs. Usage Analysis&quot;, status = &quot;primary&quot;, solidHeader = TRUE,
+            width = 12,
+            p(&quot;This section examines the relationship between scoring efficiency and usage rate. Elite players maintain high efficiency despite high usage rates.&quot;)
+          )
+        ),
+        fluidRow(
+          box(
+            title = &quot;True Shooting % vs. Usage Rate&quot;, status = &quot;info&quot;, solidHeader = TRUE,
+            width = 12,
+            plotlyOutput(&quot;ts_usage&quot;, height = 500)
+          )
+        ),
+        fluidRow(
+          box(
+            title = &quot;Points Per Shot vs. Shots Per Game&quot;, status = &quot;info&quot;, solidHeader = TRUE,
+            width = 6,
+            plotlyOutput(&quot;pts_per_shot&quot;, height = 400)
+          ),
+          box(
+            title = &quot;Efficiency Metrics by Position&quot;, status = &quot;info&quot;, solidHeader = TRUE,
+            width = 6,
+            plotlyOutput(&quot;efficiency_by_position&quot;, height = 400)
+          )
+        )
+      ),
+      
+      # Player Comparison tab
+      tabItem(tabName = &quot;comparison&quot;,
+        fluidRow(
+          box(
+            title = &quot;Player Statistical Comparison&quot;, status = &quot;primary&quot;, solidHeader = TRUE,
+            width = 12,
+            p(&quot;This interactive tool allows you to compare selected players across multiple statistical categories.&quot;),
+            p(&quot;Select players from the dropdown menu on the left to include them in the comparison.&quot;)
+          )
+        ),
+        fluidRow(
+          box(
+            title = &quot;Statistical Profile Comparison&quot;, status = &quot;info&quot;, solidHeader = TRUE,
+            width = 12,
+            plotlyOutput(&quot;player_comparison&quot;, height = 500)
+          )
+        ),
+        fluidRow(
+          box(
+            title = &quot;Detailed Stats Table&quot;, status = &quot;info&quot;, solidHeader = TRUE,
+            width = 12,
+            dataTableOutput(&quot;stats_table&quot;)
+          )
+        )
+      ),
+      
+      # About tab
+      tabItem(tabName = &quot;about&quot;,
+        fluidRow(
+          box(
+            title = &quot;About This Project&quot;, status = &quot;primary&quot;, solidHeader = TRUE,
+            width = 12,
+            h3(&quot;NBA Elite Player Analysis&quot;),
+            p(&quot;This interactive dashboard was created as a final project for MATH 230: Data Visualization &amp; Computing.&quot;),
+            p(&quot;The analysis uses advanced NBA statistics to identify and compare the league&#39;s best players through multiple analytical lenses.&quot;),
+            h4(&quot;Data Source:&quot;),
+            p(&quot;NBA player statistics from the 2024-25 regular season.&quot;),
+            h4(&quot;Analytics Approach:&quot;),
+            p(&quot;This application combines traditional box score statistics with advanced metrics to provide a comprehensive view of player performance.&quot;),
+            p(&quot;Key metrics examined include:&quot;),
+            tags$ul(
+              tags$li(&quot;Player Efficiency Rating (PER)&quot;),
+              tags$li(&quot;Value Over Replacement Player (VORP)&quot;),
+              tags$li(&quot;Win Shares (WS)&quot;),
+              tags$li(&quot;True Shooting Percentage (TS%)&quot;),
+              tags$li(&quot;Usage Rate&quot;),
+              tags$li(&quot;Offensive and Defensive Ratings&quot;)
+            ),
+            h4(&quot;Contact:&quot;),
+            p(&quot;For questions or feedback about this project, please contact [Your Name] at [Your Email].&quot;)
+          )
+        )
+      )
+    )
+  )
+)</code></pre>
+<pre><code>## `shiny::dataTableOutput()` is deprecated as of shiny 1.8.1.
+## Please use `DT::DTOutput()` instead.
+## See &lt;https://rstudio.github.io/DT/shiny.html&gt; for more information.</code></pre>
+<pre class="r"><code>server &lt;- function(input, output, session) {
+  
+  # Load and preprocess data
+  data &lt;- reactive({
+    # Read the data
+    nba_data &lt;- read.csv(&quot;nba_data_processed.csv&quot;, stringsAsFactors = FALSE)
+    
+    # Filter based on user inputs
+    filtered_data &lt;- subset(nba_data, G &gt;= input$min_games &amp; MP &gt;= input$min_minutes)
+    
+    # Apply position filter if not &quot;All&quot;
+    if (!(&quot;All&quot; %in% input$positions) &amp;&amp; length(input$positions) &gt; 0) {
+      # Create a function to check if a position matches any selected position
+      position_match &lt;- function(pos) {
+        any(sapply(input$positions, function(p) grepl(p, pos)))
+      }
+      filtered_data &lt;- filtered_data[sapply(filtered_data$Pos, position_match), ]
+    }
+    
+    # Calculate additional advanced metrics
+    filtered_data$TS_Pct &lt;- filtered_data$PTS / (2 * (filtered_data$FGA + 0.44 * filtered_data$FTA)) * 100
+    filtered_data$USG_Pct &lt;- (filtered_data$FGA + 0.44 * filtered_data$FTA + filtered_data$TOV) / (filtered_data$MP / 5) * 100
+    filtered_data$BPM_approx &lt;- (filtered_data$PTS + 2.2 * filtered_data$STL + 0.7 * filtered_data$BLK + 
+                                 0.3 * filtered_data$AST + 0.7 * filtered_data$DRB + 
+                                 0.3 * filtered_data$ORB - 0.6 * filtered_data$FGA - 
+                                 0.6 * filtered_data$FTA - 0.4 * filtered_data$PF - 
+                                 filtered_data$TOV) / filtered_data$G
+    filtered_data$VORP_approx &lt;- filtered_data$BPM_approx * (filtered_data$MP / (48 * 82)) * 2.7
+    filtered_data$WS_approx &lt;- (filtered_data$PTS * 0.037 + filtered_data$STL * 0.138 + 
+                               filtered_data$BLK * 0.095 + filtered_data$ORB * 0.034 + 
+                               filtered_data$DRB * 0.034 + filtered_data$AST * 0.048 - 
+                               filtered_data$FGA * 0.029 - filtered_data$FTA * 0.015 - 
+                               filtered_data$TOV * 0.034 - filtered_data$PF * 0.020) * filtered_data$G
+    filtered_data$PER_approx &lt;- (filtered_data$PTS + 2.7 * filtered_data$STL + 
+                                0.7 * filtered_data$BLK + 0.7 * filtered_data$AST + 
+                                0.3 * filtered_data$ORB + 0.3 * filtered_data$DRB - 
+                                0.7 * filtered_data$TOV - 0.4 * filtered_data$PF) / filtered_data$MP * 36
+    filtered_data$ORtg_approx &lt;- (filtered_data$PTS / (filtered_data$FGA + 
+                                 0.44 * filtered_data$FTA + filtered_data$TOV)) * 100
+    filtered_data$DRtg_approx &lt;- 110 - (filtered_data$STL * 0.5 + filtered_data$BLK * 0.5 + 
+                                       filtered_data$DRB * 0.1) * 100 / filtered_data$MP
+    
+    # Create simplified position categories
+    simplify_position &lt;- function(pos) {
+      if (grepl(&quot;PG&quot;, pos)) return(&quot;PG&quot;)
+      if (grepl(&quot;SG&quot;, pos)) return(&quot;SG&quot;)
+      if (grepl(&quot;SF&quot;, pos)) return(&quot;SF&quot;)
+      if (grepl(&quot;PF&quot;, pos)) return(&quot;PF&quot;)
+      if (grepl(&quot;C&quot;, pos)) return(&quot;C&quot;)
+      return(pos)  # Default case
+    }
+    filtered_data$SimplifiedPos &lt;- sapply(filtered_data$Pos, simplify_position)
+    
+    # Create offensive and defensive scores for two-way analysis
+    filtered_data$Offensive_Score &lt;- (filtered_data$PTS + filtered_data$AST*2) / 
+                                    max(filtered_data$PTS + filtered_data$AST*2, na.rm = TRUE)
+    filtered_data$Defensive_Score &lt;- (filtered_data$STL + filtered_data$BLK + filtered_data$DRB) / 
+                                    max(filtered_data$STL + filtered_data$BLK + filtered_data$DRB, na.rm = TRUE)
+    
+    # Calculate Points Per Shot
+    filtered_data$PTS_per_Shot &lt;- filtered_data$PTS / filtered_data$FGA
+    
+    return(filtered_data)
+  })
+  
+  # Update player selection dropdown based on filtered data
+  observe({
+    players &lt;- sort(data()$Player)
+    updateSelectizeInput(session, &quot;player_select&quot;, choices = players, 
+                        selected = head(players[order(data()$PER_approx, decreasing = TRUE)], 5))
+  })
+  
+  # Overview tab outputs
+  output$total_players_box &lt;- renderValueBox({
+    valueBox(
+      nrow(data()), &quot;Qualified Players&quot;, 
+      icon = icon(&quot;users&quot;), color = &quot;blue&quot;
+    )
+  })
+  
+  output$top_per_box &lt;- renderValueBox({
+    top_player &lt;- data()[which.max(data()$PER_approx), ]
+    valueBox(
+      top_player$Player, &quot;Top PER Player&quot;, 
+      icon = icon(&quot;trophy&quot;), color = &quot;yellow&quot;
+    )
+  })
+  
+  output$top_vorp_box &lt;- renderValueBox({
+    top_player &lt;- data()[which.max(data()$VORP_approx), ]
+    valueBox(
+      top_player$Player, &quot;Top VORP Player&quot;, 
+      icon = icon(&quot;award&quot;), color = &quot;green&quot;
+    )
+  })
+  
+  # Top PER Plot
+  output$top_per_plot &lt;- renderPlotly({
+    top_per &lt;- head(data()[order(-data()$PER_approx), ], 10)
+    p &lt;- ggplot(top_per, aes(x = reorder(Player, PER_approx), y = PER_approx, fill = PER_approx)) +
+      geom_bar(stat = &quot;identity&quot;) +
+      coord_flip() +
+      scale_fill_gradientn(colors = brewer.pal(9, &quot;Blues&quot;)) +
+      labs(x = NULL, y = &quot;Player Efficiency Rating&quot;) +
+      theme_minimal()
+    
+    ggplotly(p, tooltip = c(&quot;y&quot;, &quot;x&quot;))
+  })
+  
+  # Top Win Shares Plot
+  output$top_ws_plot &lt;- renderPlotly({
+    top_ws &lt;- head(data()[order(-data()$WS_approx), ], 10)
+    p &lt;- ggplot(top_ws, aes(x = reorder(Player, WS_approx), y = WS_approx, fill = WS_approx)) +
+      geom_bar(stat = &quot;identity&quot;) +
+      coord_flip() +
+      scale_fill_gradientn(colors = brewer.pal(9, &quot;Greens&quot;)) +
+      labs(x = NULL, y = &quot;Win Shares&quot;) +
+      theme_minimal()
+    
+    ggplotly(p, tooltip = c(&quot;y&quot;, &quot;x&quot;))
+  })
+  
+  # Player Efficiency tab outputs
+  output$per_leaders &lt;- renderPlotly({
+    top_per &lt;- head(data()[order(-data()$PER_approx), ], 15)
+    p &lt;- ggplot(top_per, aes(x = reorder(Player, PER_approx), y = PER_approx, fill = SimplifiedPos)) +
+      geom_bar(stat = &quot;identity&quot;) +
+      coord_flip() +
+      scale_fill_brewer(palette = &quot;Set1&quot;) +
+      labs(x = NULL, y = &quot;Player Efficiency Rating&quot;, fill = &quot;Position&quot;) +
+      theme_minimal()
+    
+    ggplotly(p, tooltip = c(&quot;y&quot;, &quot;x&quot;, &quot;fill&quot;))
+  })
+  
+  output$per_vs_ws &lt;- renderPlotly({
+    p &lt;- ggplot(data(), aes(x = PER_approx, y = WS_approx, color = SimplifiedPos, size = MP)) +
+      geom_point(alpha = 0.7) +
+      scale_color_brewer(palette = &quot;Set1&quot;) +
+      labs(x = &quot;Player Efficiency Rating&quot;, y = &quot;Win Shares&quot;, color = &quot;Position&quot;, size = &quot;Minutes Played&quot;) +
+      theme_minimal()
+    
+    ggplotly(p, tooltip = c(&quot;x&quot;, &quot;y&quot;, &quot;color&quot;, &quot;text&quot; = &quot;Player&quot;))
+  })
+  
+  output$per_by_position &lt;- renderPlotly({
+    p &lt;- ggplot(data(), aes(x = SimplifiedPos, y = PER_approx, fill = SimplifiedPos)) +
+      geom_boxplot(alpha = 0.7) +
+      geom_jitter(width = 0.2, alpha = 0.5) +
+      scale_fill_brewer(palette = &quot;Set1&quot;) +
+      labs(x = &quot;Position&quot;, y = &quot;Player Efficiency Rating&quot;, fill = &quot;Position&quot;) +
+      theme_minimal()
+    
+    ggplotly(p, tooltip = c(&quot;y&quot;, &quot;text&quot; = &quot;Player&quot;))
+  })
+  
+  # Two Way Analysis tab outputs
+  output$off_def_rating &lt;- renderPlotly({
+    p &lt;- ggplot(data(), aes(x = ORtg_approx, y = DRtg_approx, color = PTS, size = MP, text = Player)) +
+      geom_point(alpha = 0.7) +
+      scale_color_gradientn(colors = brewer.pal(9, &quot;YlOrRd&quot;)) +
+      scale_size_continuous(range = c(2, 10)) +
+      labs(x = &quot;Offensive Rating&quot;, y = &quot;Defensive Rating (lower is better)&quot;, 
+           color = &quot;Points Per Game&quot;, size = &quot;Minutes Played&quot;) +
+      theme_minimal()
+    
+    ggplotly(p, tooltip = c(&quot;x&quot;, &quot;y&quot;, &quot;color&quot;, &quot;size&quot;, &quot;text&quot;))
+  })
+  
+  output$two_way_score &lt;- renderPlotly({
+    p &lt;- ggplot(data(), aes(x = Offensive_Score, y = Defensive_Score, color = SimplifiedPos, 
+                            size = PER_approx, text = Player)) +
+      geom_point(alpha = 0.7) +
+      scale_color_brewer(palette = &quot;Set1&quot;) +
+      labs(x = &quot;Offensive Score (normalized)&quot;, y = &quot;Defensive Score (normalized)&quot;, 
+           color = &quot;Position&quot;, size = &quot;PER&quot;) +
+      theme_minimal()
+    
+    ggplotly(p, tooltip = c(&quot;x&quot;, &quot;y&quot;, &quot;color&quot;, &quot;size&quot;, &quot;text&quot;))
+  })
+  
+  output$defensive_impact &lt;- renderPlotly({
+    p &lt;- ggplot(data(), aes(x = STL, y = BLK, color = SimplifiedPos, size = DRB, text = Player)) +
+      geom_point(alpha = 0.7) +
+      scale_color_brewer(palette = &quot;Set1&quot;) +
+      labs(x = &quot;Steals Per Game&quot;, y = &quot;Blocks Per Game&quot;, 
+           color = &quot;Position&quot;, size = &quot;Defensive Rebounds&quot;) +
+      theme_minimal()
+    
+    ggplotly(p, tooltip = c(&quot;x&quot;, &quot;y&quot;, &quot;color&quot;, &quot;size&quot;, &quot;text&quot;))
+  })
+  
+  # Efficiency vs. Usage tab outputs
+  output$ts_usage &lt;- renderPlotly({
+    p &lt;- ggplot(data(), aes(x = USG_Pct, y = TS_Pct, color = PTS, size = MP, text = Player)) +
+      geom_point(alpha = 0.7) +
+      scale_color_gradientn(colors = brewer.pal(9, &quot;YlOrRd&quot;)) +
+      scale_size_continuous(range = c(2, 10)) +
+      labs(x = &quot;Usage Rate (%)&quot;, y = &quot;True Shooting Percentage (%)&quot;, 
+           color = &quot;Points Per Game&quot;, size = &quot;Minutes Played&quot;) +
+      theme_minimal() +
+      # Add reference line for league average TS%
+      geom_hline(yintercept = mean(data()$TS_Pct, na.rm = TRUE), linetype = &quot;dashed&quot;, color = &quot;gray50&quot;)
+    
+    ggplotly(p, tooltip = c(&quot;x&quot;, &quot;y&quot;, &quot;color&quot;, &quot;size&quot;, &quot;text&quot;))
+  })
+  
+  output$pts_per_shot &lt;- renderPlotly({
+    p &lt;- ggplot(data(), aes(x = FGA, y = PTS_per_Shot, color = SimplifiedPos, text = Player)) +
+      geom_point(alpha = 0.7) +
+      scale_color_brewer(palette = &quot;Set1&quot;) +
+      labs(x = &quot;Field Goal Attempts Per Game&quot;, y = &quot;Points Per Shot&quot;, color = &quot;Position&quot;) +
+      theme_minimal()
+    
+    ggplotly(p, tooltip = c(&quot;x&quot;, &quot;y&quot;, &quot;color&quot;, &quot;text&quot;))
+  })
+  
+  output$efficiency_by_position &lt;- renderPlotly({
+    pos_efficiency &lt;- aggregate(cbind(TS_Pct, `FG.`, `3P.`, `FT.`) ~ SimplifiedPos, data = data(), mean)
+    
+    # Convert from wide to long format
+    eff_long &lt;- reshape2::melt(pos_efficiency, id.vars = &quot;SimplifiedPos&quot;)
+    
+    p &lt;- ggplot(eff_long, aes(x = SimplifiedPos, y = value, fill = variable)) +
+      geom_bar(stat = &quot;identity&quot;, position = &quot;dodge&quot;) +
+      scale_fill_brewer(palette = &quot;Set2&quot;, 
+                      labels = c(&quot;True Shooting %&quot;, &quot;Field Goal %&quot;, &quot;3-Point %&quot;, &quot;Free Throw %&quot;)) +
+      labs(x = &quot;Position&quot;, y = &quot;Percentage&quot;, fill = &quot;Metric&quot;) +
+      theme_minimal()
+    
+    ggplotly(p, tooltip = c(&quot;x&quot;, &quot;y&quot;, &quot;fill&quot;))
+  })
+  
+  # Player Comparison tab outputs
+  output$player_comparison &lt;- renderPlotly({
+    # If no players selected, use top 5 by PER
+    selected_players &lt;- input$player_select
+    if (length(selected_players) == 0) {
+      selected_players &lt;- head(data()[order(-data()$PER_approx), ]$Player, 5)
+    }
+    
+    # Get data for selected players
+    player_data &lt;- subset(data(), Player %in% selected_players)
+    
+    # Select stats to compare
+    compare_stats &lt;- c(&quot;PTS&quot;, &quot;AST&quot;, &quot;TRB&quot;, &quot;STL&quot;, &quot;BLK&quot;, &quot;TS_Pct&quot;, &quot;PER_approx&quot;, &quot;WS_approx&quot;)
+    
+    # Scale the values for comparison (0-1 scale)
+    scaled_data &lt;- player_data[, c(&quot;Player&quot;, compare_stats)]
+    for(stat in compare_stats) {
+      max_val &lt;- max(data()[[stat]], na.rm = TRUE)
+      scaled_data[[stat]] &lt;- scaled_data[[stat]] / max_val
+    }
+    
+    # Convert to long format
+    long_data &lt;- reshape2::melt(scaled_data, id.vars = &quot;Player&quot;, 
+                               variable.name = &quot;Metric&quot;, value.name = &quot;Value&quot;)
+    
+    # Create parallel coordinates plot
+    p &lt;- ggplot(long_data, aes(x = Metric, y = Value, group = Player, color = Player)) +
+      geom_line(size = 1.2) +
+      geom_point(size = 3) +
+      scale_color_brewer(palette = &quot;Set1&quot;) +
+      labs(x = &quot;Statistical Category&quot;, y = &quot;Value (normalized)&quot;, color = &quot;Player&quot;) +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    
+    ggplotly(p, tooltip = c(&quot;color&quot;, &quot;y&quot;, &quot;x&quot;))
+  })
+  
+  output$stats_table &lt;- renderDataTable({
+    # If no players selected, use top 5 by PER
+    selected_players &lt;- input$player_select
+    if (length(selected_players) == 0) {
+      selected_players &lt;- head(data()[order(-data()$PER_approx), ]$Player, 5)
+    }
+    
+    # Get data for selected players
+    player_data &lt;- subset(data(), Player %in% selected_players)
+    
+    # Select columns to display
+    display_cols &lt;- c(&quot;Player&quot;, &quot;Pos&quot;, &quot;Age&quot;, &quot;G&quot;, &quot;MP&quot;, &quot;PTS&quot;, &quot;AST&quot;, &quot;TRB&quot;, &quot;STL&quot;, &quot;BLK&quot;, 
+                     &quot;FG.&quot;, &quot;3P.&quot;, &quot;FT.&quot;, &quot;eFG.&quot;, &quot;TS_Pct&quot;, &quot;PER_approx&quot;, &quot;WS_approx&quot;, &quot;VORP_approx&quot;)
+    
+    # Rename columns for display
+    stats_table &lt;- player_data[, display_cols]
+    colnames(stats_table) &lt;- c(&quot;Player&quot;, &quot;Position&quot;, &quot;Age&quot;, &quot;Games&quot;, &quot;Minutes&quot;, &quot;Points&quot;, &quot;Assists&quot;, 
+                             &quot;Rebounds&quot;, &quot;Steals&quot;, &quot;Blocks&quot;, &quot;FG%&quot;, &quot;3P%&quot;, &quot;FT%&quot;, &quot;eFG%&quot;, 
+                             &quot;TS%&quot;, &quot;PER&quot;, &quot;Win Shares&quot;, &quot;VORP&quot;)
+    
+    stats_table
+  })
+}</code></pre>
+<pre class="r"><code># Run the Shiny app
+shinyApp(ui, server)</code></pre>
+<iframe data-deferred-src="appa85d37d6943879ed38a86e5793ca8779/?w=&amp;__subapp__=1" width="100%" height="400" class="shiny-frame shiny-frame-deferred"></iframe>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("section-TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
