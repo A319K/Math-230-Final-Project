@@ -4,12 +4,23 @@ description: |
   Telling a story through data visualization
 author:
   - name: Aiden Kim
-    url: https://github.com/ajk041
+    url: https://github.com/A319K
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-# Coming Soon
+## Final Project
 
+```{=html}
+<div style="width: 100vw; margin-left: calc(-50vw + 50%);">
+  <iframe
+    src="https://ppc7dm-aiden-kim.shinyapps.io/Math-230-Final-Project/"
+    width="100%"
+    height="800px"
+    style="border:none;">
+  </iframe>
+</div>
+
+```
