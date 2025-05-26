@@ -50,11 +50,7 @@ NBA player statistics from the 2023-24 regular season, including:
 
 ## 🚀 Live Demo
 
-The full dashboard is deployed and acessible at:
-
-**[https://a319k.github.io/Math-230-Final-Project/](https://a319k.github.io/Math-230-Final-Project/)**
-The interactive dashboard is deployed and accessible at:
-**[https://ppc7dm-aiden-kim.shinyapps.io/Math-230-Final-Project/](https://ppc7dm-aiden-kim.shinyapps.io/Math-230-Final-Project/)**
+The full portfolio is deployed and acessible at: **[https://a319k.github.io/Math-230-Final-Project/](https://a319k.github.io/Math-230-Final-Project/)**
 
 ## 📁 Project Structure
 
